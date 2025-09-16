@@ -3,12 +3,13 @@ import sys
 from typing import Optional
 import psycopg2
 from psycopg2 import sql
+from tabulate import tabulate
 
 DB_CONFIG = {
     'host': 'localhost',
     'user': 'postgres',
     'password': 'postgres',
-    'database': 'sistemaVendas'
+    'database': 'postgres'
 }
 
 class SistemaVendasCLI:
@@ -44,9 +45,57 @@ class SistemaVendasCLI:
             self.conexao.close()
             print("Conexão com o banco de dados encerrada.")
                         
+                  
     def executar_consulta(self, sql: str, descricao: str) -> None:
-        # DEVE SER IMPLEMENTADO
-        return None
+        """Executa uma consulta SQL e exibe os resultados formatados"""
+        print(f"\nExecutando: {descricao}")
+        print("=" * 60)
+        print(f"SQL: {sql.strip()}")
+        print("=" * 60)
+        # existe a biblioteca tabulate
+        try:
+            cursor = self.conexao.cursor()
+            cursor.execute(sql)
+            resultados = cursor.fetchall()
+            colunas = [desc[0] for desc in cursor.description]
+            table = tabulate(resultados, headers=colunas, tablefmt="grid")
+            if resultados:
+                # Exibir cabeçalhos
+                print("\n Resultados:")
+                print(table)
+                
+                # # Cria o cabeçalho da tabela formatando cada nome de coluna
+                # #  Aplica formatação de 20 caracteres alinhados à esquerda (:<20)
+                # # com 20 caracteres alinhados à esquerda e separados por " | "
+                # header = " | ".join(f"{col:<20}" for col in colunas)
+                # print(header)
+                # print("-" * len(header))
+                
+                # # Exibir dados
+                # for linha in resultados:
+                #     #  Formata cada linha de resultado criando uma string onde:
+                #     #  Converte cada valor da linha para string com str(valor)
+                
+                #     #  Aplica formatação de 20 caracteres alinhados à esquerda (:<20)
+                #     #  Une todos os valores formatados com " | " como separador
+                #     #  Resultado: colunas alinhadas visualmente em formato tabular
+                #     row = " | ".join(f"{str(valor):<20}" for valor in linha)
+                #     print(row)
+                    
+                print(f"\nTotal de registros encontrados: {len(resultados)}")
+                
+            else:
+                print("\nNenhum registro encontrado.")
+                
+        except psycopg2.Error as e:
+            print(f"\nErro na consulta SQL: {e}")
+        except Exception as e:
+            print(f"\nErro inesperado: {e}")
+        finally:
+            if 'cursor' in locals():
+                cursor.close()
+        
+        print("\nConsulta finalizada!")
     
     # ========================================
     # FUNCOES COM CONSULTAS SQL
@@ -55,8 +104,8 @@ class SistemaVendasCLI:
     def consulta_01_usuarios_ativos(self):
         """1. Listagem de Usuários Ativos"""
         sql = """
-        SELECT id, nome, email, telefone
-        FROM usuarios
+        SELECT id_usuario, nome, email, telefone
+        FROM usuario
         WHERE ativo = TRUE;
         """
         self.executar_consulta(sql, "1. Listagem de Usuários Ativos")
