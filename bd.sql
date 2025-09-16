@@ -86,6 +86,13 @@ INSERT INTO produto (nome, descricao, categoria, preco, quantidade_estoque, peso
 ('Livro Python', 'Livro sobre programação em Python', 'Livros', 89.90, 30, 0.500),
 ('Mouse Gamer', 'Mouse óptico para jogos', 'Informática', 120.00, 75, 0.150);
 
+INSERT INTO produto (nome, descricao, categoria, preco, quantidade_estoque, peso, ativo) VALUES
+('PS5', 'PS5 nova geração', 'Eletrônicos', 5000.00, 0, 1, False)
+
+-- Itens dos pedidos
+INSERT INTO itens_pedido (id_pedido, id_produto, quantidade, preco_unitario) VALUES
+(4, 1, 1, 1200.00)  -- João: 1 Smartphone
+
 -- Pedidos
 INSERT INTO pedido (id_usuario, endereco_entrega, observacoes) VALUES
 (1, 'Rua A, 123, São Paulo - SP', 'Entregar no período da manhã'),
