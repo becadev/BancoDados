@@ -64,7 +64,7 @@ WITH pedidos_categoria AS (
     FROM pedido ped
     INNER JOIN itens_pedido itens ON ped.id_pedido = itens.id_pedido 
     INNER JOIN produto prod ON itens.id_produto = prod.id_produto
-    WHERE ped.status_pedido != 'cancelado'
+    WHERE ped.status != 'cancelado'
     GROUP BY ped.id_pedido, prod.categoria
 )
 
@@ -73,3 +73,14 @@ SELECT
     ROUND(AVG(valor_pedido_categoria), 2) AS ticket_medio
 FROM pedidos_categoria
 GROUP BY categoria
+
+
+SELECT  vend.nome,
+		sum(iped.quantidade) as quantidade_itens_vendidos,
+		vend.nome as nome_vendedor
+FROM pedido as ped
+INNER JOIN item_pedido iped on ped.pedido_id = iped.pedido_id
+INNER JOIN item on iped.item_id = item.item_id
+INNER JOIN vendedor vend on item.vendedor_id = vend.vendedor_id
+GROUP BY vend.nome
+ORDER BY quantidade_itens_vendidos DESC

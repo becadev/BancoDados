@@ -112,3 +112,37 @@ INSERT INTO itens_pedido (id_pedido, id_produto, quantidade, preco_unitario) VAL
 (2, 2, 1, 2500.00),  -- Maria: 1 Notebook
 (2, 3, 1, 350.00),   -- Maria: 1 Tênis
 (3, 4, 3, 89.90);    -- João: 3 Livros
+
+
+
+CREATE TABLE cliente (
+    cliente_id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(11) NOT NULL UNIQUE,  
+    telefone VARCHAR(15),
+    email VARCHAR(100)
+)
+
+
+CREATE TABLE endereco (
+    endereco_id SERIAL PRIMARY KEY,
+    cliente_id INT REFERENCES cliente(cliente_id),
+    rua VARCHAR(255) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    cep VARCHAR(10) NOT NULL
+);
+
+
+CREATE TABLE forma_pagamento (
+    forma_pagamento_id SERIAL PRIMARY KEY,
+    tipo VARCHAR(50) NOT NULL
+)
+
+
+CREATE TABLE vendedor (
+    vendedor_id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    endereco VARCHAR(255),
+    telefone VARCHAR(15)
+);
